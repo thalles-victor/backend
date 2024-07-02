@@ -9,30 +9,31 @@ type ReadVideoOptionsServiceProps = {
 
 export class ReadLessonService {
   async execute(
-    nameId: string,
+    module: string,
+    lesson: string,
     { start, end }: ReadVideoOptionsServiceProps,
   ): Promise<Stream> {
-    const path = this.getVideoPath(nameId);
+    const path = this.getVideoPath(module, lesson);
 
     const stream = fs.createReadStream(path, { start, end });
 
     return stream;
   }
 
-  public getVideoPath(nameId: string) {
+  public getVideoPath(module: string, lesson: string) {
     return path.join(
       process.cwd(),
       'src',
       '@assets',
       'Course',
       'Modules',
-      'Module 1 - Iniciando Com nestjs',
-      nameId,
+      module,
+      lesson,
     );
   }
 
-  public getVideosInformation(nameId: string) {
-    const path = this.getVideoPath(nameId);
+  public getVideosInformation(module: string, lesson: string) {
+    const path = this.getVideoPath(module, lesson);
 
     const information = fs.statSync(path);
 

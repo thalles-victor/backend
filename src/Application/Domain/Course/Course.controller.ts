@@ -10,7 +10,8 @@ import { ReadLessonService } from './UseCases/ReadVideo/ReadVideo.service';
 import { Request, Response } from 'express';
 
 type CreateResponseHeaderProps = {
-  nameId: string;
+  module: string;
+  lesson: string;
   range: string;
 };
 
@@ -18,15 +19,15 @@ type CreateResponseHeaderProps = {
 export class CourseController {
   constructor(private readonly readLessonService: ReadLessonService) {}
 
-  @Get(':nameId')
+  @Get(':module/:lesson')
   async exampleLesson(
     @Req() request: Request,
     @Res() response: Response,
-    @Param() params: any,
+    @Param('module') module: string,
+    @Param('lesson') lesson: string,
   ) {
     const range = request.headers.range;
-    // const nameId = request.params['name-id'];
-    const nameId = params.nameId;
+    const nameId = lesson;
 
     if (!nameId) {
       throw new BadRequestException('Require the video name id');
@@ -36,11 +37,15 @@ export class CourseController {
       throw new BadRequestException('Requires Range header');
     }
 
-    const { headers, interval } = this.createResponseHeader({ nameId, range });
+    const { headers, interval } = this.createResponseHeader({
+      module,
+      lesson,
+      range,
+    });
 
     response.writeHead(206, headers);
 
-    const stream = await this.readLessonService.execute(nameId, {
+    const stream = await this.readLessonService.execute(module, lesson, {
       start: interval.start,
       end: interval.end,
     });
@@ -48,8 +53,15 @@ export class CourseController {
     stream.pipe(response);
   }
 
-  private createResponseHeader({ nameId, range }: CreateResponseHeaderProps) {
-    const videoSize = this.readLessonService.getVideosInformation(nameId).size;
+  private createResponseHeader({
+    module,
+    lesson,
+    range,
+  }: CreateResponseHeaderProps) {
+    const videoSize = this.readLessonService.getVideosInformation(
+      module,
+      lesson,
+    ).size;
 
     const CHUNK_SIZE = 10 ** 10;
     const start = Number(range.replace(/\D/g, ''));
