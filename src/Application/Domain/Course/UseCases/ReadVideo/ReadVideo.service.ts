@@ -2,30 +2,24 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { Stream } from 'node:stream';
 
-type ReadVideoServiceProps = {
+type ReadVideoOptionsServiceProps = {
   start: number;
   end: number;
 };
 
 export class ReadLessonService {
-  async execute({ start, end }: ReadVideoServiceProps): Promise<Stream> {
-    const stream = fs.createReadStream(
-      path.join(
-        process.cwd(),
-        'src',
-        '@assets',
-        'Course',
-        'Modules',
-        'Module 1 - Iniciando Com nestjs',
-        'Nestjs Aula 01.mp4',
-      ),
-      { start, end },
-    );
+  async execute(
+    nameId: string,
+    { start, end }: ReadVideoOptionsServiceProps,
+  ): Promise<Stream> {
+    const path = this.getVideoPath(nameId);
+
+    const stream = fs.createReadStream(path, { start, end });
 
     return stream;
   }
 
-  public getVideoPath() {
+  public getVideoPath(nameId: string) {
     return path.join(
       process.cwd(),
       'src',
@@ -33,12 +27,12 @@ export class ReadLessonService {
       'Course',
       'Modules',
       'Module 1 - Iniciando Com nestjs',
-      'Nestjs Aula 01.mp4',
+      nameId,
     );
   }
 
-  public getVideosInformation() {
-    const path = this.getVideoPath();
+  public getVideosInformation(nameId: string) {
+    const path = this.getVideoPath(nameId);
 
     const information = fs.statSync(path);
 
