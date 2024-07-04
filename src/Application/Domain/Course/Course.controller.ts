@@ -3,11 +3,16 @@ import {
   Controller,
   Get,
   Param,
+  Post,
   Req,
   Res,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ReadLessonService } from './UseCases/ReadVideo/ReadVideo.service';
 import { Request, Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadVideoService } from './UseCases/UploadVideo/UploadService.service';
 
 type CreateResponseHeaderProps = {
   module: string;
@@ -17,7 +22,10 @@ type CreateResponseHeaderProps = {
 
 @Controller('aulas')
 export class CourseController {
-  constructor(private readonly readLessonService: ReadLessonService) {}
+  constructor(
+    private readonly readLessonService: ReadLessonService,
+    private readonly uploadVideoService: UploadVideoService,
+  ) {}
 
   @Get(':module/:lesson')
   async exampleLesson(
@@ -82,6 +90,14 @@ export class CourseController {
         end: end,
       },
     };
+
+    return result;
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    const result = this.uploadVideoService.execute(file);
 
     return result;
   }
