@@ -7,6 +7,7 @@ import { AuthModule } from './Application/Domain/Auth/Auth.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { StudentEntity } from './Application/Entities/Student.entity';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database: 'db',
       password: 'pass',
       username: 'user',
-      entities: [],
+      entities: [StudentEntity],
       synchronize: true,
     }),
     ConfigModule.forRoot({
