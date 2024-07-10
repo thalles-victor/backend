@@ -1,8 +1,10 @@
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { StudentEntity } from '../../Entities/Student.entity';
 import { StudentsRepositoryContract } from './Students.repository-contract';
 import { InjectRepository } from '@nestjs/typeorm';
 
+@Injectable()
 export class StudentsTypeOrmRepository
   implements
     StudentsRepositoryContract<

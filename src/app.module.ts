@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { UserModule } from './Application/Domain/User/user.module';
 import { CourseModule } from './Application/Domain/Course/Course.module';
 import { StudentModule } from './Application/Domain/Student/Student.module';
 import { AuthModule } from './Application/Domain/Auth/Auth.module';
@@ -8,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { StudentEntity } from './Application/Entities/Student.entity';
+import { RepositoriesModule } from './Application/Repositories/Students.module';
 
 @Module({
   imports: [
@@ -28,9 +28,9 @@ import { StudentEntity } from './Application/Entities/Student.entity';
         REFRESH_TOKEN_EXPIRATION: Joi.string(),
       }),
     }),
-    UserModule,
     CourseModule,
     StudentModule,
+    RepositoriesModule,
     AuthModule,
   ],
   controllers: [AppController],
