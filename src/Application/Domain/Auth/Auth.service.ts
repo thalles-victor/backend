@@ -15,10 +15,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(
-    email: string,
-    password: string,
-  ): Promise<Omit<StudentEntity, 'password'>> {
+  async validateUser(email: string, password: string): Promise<StudentEntity> {
     const student = await this.studentsService.getByEmail(email);
 
     if (!student) {
