@@ -1,20 +1,42 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { StudentService } from '../Student/Student.service';
+import { JwtService } from '@nestjs/jwt';
+import { StudentEntity } from 'src/Application/Entities/Student.entity';
+import { TStudentPayload } from 'src/Application/@types';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly studentService: StudentService) {}
+  constructor(
+    private readonly studentsService: StudentService,
+    private jwtService: JwtService,
+  ) {}
 
-  async signIn(email: string, pass: string): Promise<any> {
-    const student = await this.studentService.findOne(email);
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<Omit<StudentEntity, 'password'>> {
+    const student = await this.studentsService.getByEmail(email);
 
-    if (student?.password != pass) {
-      throw new UnauthorizedException();
+    if (!student) {
+      throw new NotFoundException('student not found');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...result } = student;
+    if (student.password != password) {
+      throw new UnauthorizedException('password incorrect');
+    }
 
-    return result;
+    return student;
+  }
+
+  async signIn(student: StudentEntity) {
+    const payload: TStudentPayload = { sub: student.id };
+
+    const access_token = this.jwtService.sign(payload);
+
+    return { access_token };
   }
 }
