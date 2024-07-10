@@ -6,9 +6,19 @@ import { StudentModule } from './Application/Domain/Student/Student.module';
 import { AuthModule } from './Application/Domain/Auth/Auth.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      database: 'db',
+      password: 'pass',
+      username: 'user',
+      entities: [],
+      synchronize: true,
+    }),
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         ACCESS_TOKEN_SECRET: Joi.string(),

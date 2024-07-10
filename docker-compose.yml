@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  coder-advance-database:
+    container_name: coder-advance-database
+    image: postgres
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+    volumes:
+      - '.:/postgres/data'
+    ports:
+      - 5432:5432
