@@ -17,3 +17,5 @@ export class StudentEntity {
   @Column({ type: 'varchar', nullable: true, select: false })
   refresh_token?: string;
 }
+
+export type UpdateStudentEntity = Omit<StudentEntity, 'id' | 'email'>;

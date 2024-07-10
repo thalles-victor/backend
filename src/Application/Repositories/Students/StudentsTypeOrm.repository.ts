@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { StudentEntity } from '../../Entities/Student.entity';
+import {
+  StudentEntity,
+  UpdateStudentEntity,
+} from '../../Entities/Student.entity';
 import { StudentsRepositoryContract } from './Students.repository-contract';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -40,7 +43,7 @@ export class StudentsTypeOrmRepository
 
   async updateById(
     id: string,
-    updateEntity: Omit<StudentEntity, 'id' | 'email'>,
+    updateEntity: UpdateStudentEntity,
   ): Promise<StudentEntity | null> {
     let studentUpdated: StudentEntity;
 
@@ -49,9 +52,7 @@ export class StudentsTypeOrmRepository
         id,
       });
 
-      if (!studentToUpdate) {
-        throw new Error('student not found');
-      }
+      if (!studentToUpdate) throw new Error('student not found');
 
       studentUpdated = await this.studentTypeOrmRepository.save({
         ...studentToUpdate,
