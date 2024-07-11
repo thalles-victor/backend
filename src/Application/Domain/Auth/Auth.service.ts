@@ -7,6 +7,7 @@ import { StudentService } from '../Student/Student.service';
 import { JwtService } from '@nestjs/jwt';
 import { StudentEntity } from 'src/Application/Entities/Student.entity';
 import { TStudentPayload } from 'src/Application/@types';
+import { RegisterStudentDto } from '../Student/dtos/Student.dtos';
 
 @Injectable()
 export class AuthService {
@@ -35,5 +36,16 @@ export class AuthService {
     const access_token = this.jwtService.sign(payload);
 
     return { access_token };
+  }
+
+  async signUp(
+    student: RegisterStudentDto,
+  ): Promise<Omit<StudentEntity, 'password'>> {
+    const studentCreated = await this.studentsService.register(student);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = studentCreated;
+
+    return result;
   }
 }

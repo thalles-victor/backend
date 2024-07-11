@@ -1,13 +1,36 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   StudentEntity,
   UpdateStudentEntity,
 } from 'src/Application/Entities/Student.entity';
 import { StudentsTypeOrmRepository } from 'src/Application/Repositories/Students/StudentsTypeOrm.repository';
+import { RegisterStudentDto } from './dtos/Student.dtos';
+import * as GenIds from 'src/utils/id-generate';
 
 @Injectable()
 export class StudentService {
   constructor(private readonly studentsRepository: StudentsTypeOrmRepository) {}
+
+  async register(student: RegisterStudentDto) {
+    const studentExist = await this.studentsRepository.getOnByEmail(
+      student.email,
+    );
+
+    if (studentExist) throw new BadRequestException('student already exist');
+
+    const studentRegistered = await this.studentsRepository.create({
+      id: GenIds.generateStudentId(),
+      name: student.name,
+      email: student.email,
+      password: student.password,
+    });
+
+    return studentRegistered;
+  }
 
   async getByEmail(email: string): Promise<StudentEntity | null> {
     const student = await this.studentsRepository.getOnByEmail(email);
