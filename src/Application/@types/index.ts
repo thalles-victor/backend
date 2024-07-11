@@ -10,4 +10,6 @@ export type TSignIn = {
 
 export type TStudentPayload = {
   sub: string;
+  iat?: number;
+  exp?: number;
 };
