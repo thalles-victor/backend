@@ -1,8 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({ name: 'students' })
 export class StudentEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn({ type: 'varchar' })
   id: string;
 
   @Column({ type: 'varchar' })
