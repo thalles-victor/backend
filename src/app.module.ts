@@ -10,15 +10,19 @@ import { RepositoriesModule } from './Application/Repositories/Students.module';
 
 import * as Joi from 'joi';
 
+const schema = Joi.object().keys({
+  ACCESS_TOKEN_SECRET: Joi.string().required(),
+  ACCESS_TOKEN_EXPIRATION: Joi.string().required(),
+  REFRESH_TOKEN_SECRET: Joi.string().required(),
+  REFRESH_TOKEN_EXPIRATION: Joi.string().required(),
+  ROOT_EMAIL: Joi.string().required(),
+  ROOT_PASSWORD: Joi.string().required(),
+});
+
 @Module({
   imports: [
     ConfigModule.forRoot({
-      validationSchema: Joi.object({
-        ACCESS_TOKEN_SECRET: Joi.string(),
-        ACCESS_TOKEN_EXPIRATION: Joi.string(),
-        REFRESH_TOKEN_SECRET: Joi.string(),
-        REFRESH_TOKEN_EXPIRATION: Joi.string(),
-      }),
+      validationSchema: schema,
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
