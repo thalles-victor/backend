@@ -4,7 +4,10 @@ import {
   StudentEntity,
   UpdateStudentEntity,
 } from '../../Entities/Student.entity';
-import { StudentsRepositoryContract } from './Students.repository-contract';
+import {
+  StudentsRepositoryContract,
+  TTargetStudentParam,
+} from './Students.repository-contract';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -41,27 +44,33 @@ export class StudentsTypeOrmRepository
     return this.studentTypeOrmRepository.findOneBy({ id });
   }
 
-  async updateById(
-    id: string,
+  async updateBy(
+    target: TTargetStudentParam,
     updateEntity: UpdateStudentEntity,
   ): Promise<StudentEntity | null> {
-    let studentUpdated: StudentEntity;
+    let studentToUpdate: StudentEntity | undefined = undefined;
 
     try {
-      const studentToUpdate = await this.studentTypeOrmRepository.findOneBy({
-        id,
-      });
-
-      if (!studentToUpdate) throw new Error('student not found');
-
-      studentUpdated = await this.studentTypeOrmRepository.save({
-        ...studentToUpdate,
-        ...updateEntity,
-      });
+      if ('id' in target) {
+        studentToUpdate = await this.studentTypeOrmRepository.findOneBy({
+          id: target.id,
+        });
+      } else if ('email' in target) {
+        studentToUpdate = await this.studentTypeOrmRepository.findOneBy({
+          email: target.email,
+        });
+      }
     } catch (error) {
       console.log('error while updating the student');
       console.error(error);
     }
+
+    if (!studentToUpdate) throw new Error('student not found');
+
+    const studentUpdated = await this.studentTypeOrmRepository.save({
+      ...studentToUpdate,
+      ...updateEntity,
+    });
 
     return studentUpdated;
   }

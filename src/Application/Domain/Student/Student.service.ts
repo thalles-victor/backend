@@ -57,13 +57,43 @@ export class StudentService {
 
     if (!userToUpdate) throw new NotFoundException('student not found');
 
-    const userUpdated = await this.studentsRepository.updateById(id, {
-      name: updateEntity.name,
-      password: updateEntity.password,
-      refresh_token: updateEntity.refresh_token,
-      roles: [Role.STUDENT],
-    });
+    const userUpdated = await this.studentsRepository.updateBy(
+      { id },
+      {
+        name: updateEntity.name,
+        password: updateEntity.password,
+        refresh_token: updateEntity.refresh_token,
+        roles: [Role.STUDENT],
+      },
+    );
 
     return userUpdated;
+  }
+
+  async becomeOrDetractAdmin(email: string, action: 'become' | 'detract') {
+    let studentUpdate: StudentEntity;
+
+    const studentToUpdate = await this.studentsRepository.getOnByEmail(email);
+
+    if (!studentToUpdate) throw new NotFoundException();
+
+    if (action === 'become') {
+      studentUpdate = Object.assign(new StudentEntity(), {
+        ...studentToUpdate,
+        roles: [Role.STUDENT, Role.ADMIN],
+      } as StudentEntity);
+    } else if (action === 'detract') {
+      studentUpdate = Object.assign(new StudentEntity(), {
+        ...studentToUpdate,
+        roles: [Role.STUDENT],
+      } as StudentEntity);
+    }
+
+    const studentUpdated = await this.studentsRepository.updateBy(
+      { email: studentToUpdate.email },
+      studentUpdate,
+    );
+
+    return studentUpdated;
   }
 }
