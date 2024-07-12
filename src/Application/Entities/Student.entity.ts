@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
-import { Role } from '../Domain/Auth/AccessControll/role';
+import { Role } from '../Domain/Auth/AccessControl/role';
 
 @Entity({ name: 'students' })
 export class StudentEntity {

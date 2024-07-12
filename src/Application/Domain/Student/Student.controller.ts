@@ -1,9 +1,9 @@
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { TStudentPayload } from 'src/Application/@types';
-import { RolesDecorator } from '../Auth/AccessControll/roles.decorator';
-import { Role } from '../Auth/AccessControll/role';
+import { RolesDecorator } from '../Auth/AccessControl/roles.decorator';
+import { Role } from '../Auth/AccessControl/role';
 import { AuthJwtGuard } from '../Auth/guards/auth.guard';
-import { RolesGuard } from '../Auth/AccessControll/role.guard';
+import { RolesGuard } from '../Auth/AccessControl/role.guard';
 
 @Controller('student')
 export class StudentController {

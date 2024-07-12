@@ -1,4 +1,4 @@
-import { Role } from '../Domain/Auth/AccessControll/role';
+import { Role } from '../Domain/Auth/AccessControl/role';
 
 export type TPayload = {
   sub: string;

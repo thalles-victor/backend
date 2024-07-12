@@ -10,7 +10,7 @@ import {
 import { StudentsTypeOrmRepository } from 'src/Application/Repositories/Students/StudentsTypeOrm.repository';
 import { RegisterStudentDto } from './dtos/Student.dtos';
 import * as GenIds from 'src/utils/id-generate';
-import { Role } from '../Auth/AccessControll/role';
+import { Role } from '../Auth/AccessControl/role';
 
 @Injectable()
 export class StudentService {
