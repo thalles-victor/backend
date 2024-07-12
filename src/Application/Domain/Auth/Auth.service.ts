@@ -6,17 +6,27 @@ import {
 import { StudentService } from '../Student/Student.service';
 import { JwtService } from '@nestjs/jwt';
 import { StudentEntity } from 'src/Application/Entities/Student.entity';
-import { TSignIn, TStudentPayload } from 'src/Application/@types';
+import { TRootPayload, TSignIn, TStudentPayload } from 'src/Application/@types';
 import { RegisterStudentDto } from '../Student/dtos/Student.dtos';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly studentsService: StudentService,
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<StudentEntity> {
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<StudentEntity | 'isRoot'> {
+    const rootAuthResult = await this.userIsRoot(email, password);
+    if (rootAuthResult) {
+      return 'isRoot';
+    }
+
     const student = await this.studentsService.getByEmail(email);
 
     if (!student) {
@@ -31,15 +41,32 @@ export class AuthService {
   }
 
   async signIn(credentials: TSignIn) {
-    const student = await this.validateStudent(credentials);
+    const student = await this.validateUser(
+      credentials.email,
+      credentials.password,
+    );
 
-    const payload: TStudentPayload = { sub: student.id, roles: student.roles };
+    if (student !== 'isRoot') {
+      const payload: TStudentPayload = {
+        sub: student.id,
+        roles: student.roles,
+      };
+
+      const access_token = this.jwtService.sign(payload);
+
+      return { access_token };
+    }
+
+    const payload: TRootPayload = {
+      roles: ['ROOT'],
+    };
 
     const access_token = this.jwtService.sign(payload);
 
     return { access_token };
   }
 
+  /*** @deprecated */
   private async validateStudent(credentials: TSignIn): Promise<StudentEntity> {
     const studentExist = await this.studentsService.getByEmail(
       credentials.email,
@@ -64,5 +91,16 @@ export class AuthService {
     const { password, ...result } = studentCreated;
 
     return result;
+  }
+
+  private async userIsRoot(email: string, password: string) {
+    const rootEmail = this.configService.get<string>('ROOT_EMAIL');
+    const rootPassword = this.configService.get<string>('ROOT_PASSWORD');
+
+    if (rootEmail === email && rootPassword === password) {
+      return true;
+    }
+
+    return false;
   }
 }

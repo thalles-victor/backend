@@ -16,3 +16,7 @@ export type TStudentPayload = {
   iat?: number;
   exp?: number;
 };
+
+export type TRootPayload = {
+  roles: ['ROOT'];
+};
