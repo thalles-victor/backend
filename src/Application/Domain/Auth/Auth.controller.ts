@@ -1,16 +1,15 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './Auth.service';
 import { RegisterStudentDto } from '../Student/dtos/Student.dtos';
-import { AuthGuard } from '@nestjs/passport';
+import { TSignIn } from 'src/Application/@types';
 
 @Controller('/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(AuthGuard('local'))
   @Post('signin')
-  async login(@Request() request: any) {
-    return this.authService.signIn(request.user);
+  async login(@Body() credentials: TSignIn) {
+    return this.authService.signIn(credentials);
   }
 
   @Post('signup')

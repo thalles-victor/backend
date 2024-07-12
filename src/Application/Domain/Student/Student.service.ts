@@ -10,6 +10,7 @@ import {
 import { StudentsTypeOrmRepository } from 'src/Application/Repositories/Students/StudentsTypeOrm.repository';
 import { RegisterStudentDto } from './dtos/Student.dtos';
 import * as GenIds from 'src/utils/id-generate';
+import { Role } from '../Auth/AccessControll/role';
 
 @Injectable()
 export class StudentService {
@@ -27,6 +28,7 @@ export class StudentService {
       name: student.name,
       email: student.email,
       password: student.password,
+      roles: [],
     });
 
     return studentRegistered;
@@ -59,6 +61,7 @@ export class StudentService {
       name: updateEntity.name,
       password: updateEntity.password,
       refresh_token: updateEntity.refresh_token,
+      roles: [Role.STUDENT],
     });
 
     return userUpdated;

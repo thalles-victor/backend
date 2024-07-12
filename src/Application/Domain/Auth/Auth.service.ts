@@ -6,7 +6,7 @@ import {
 import { StudentService } from '../Student/Student.service';
 import { JwtService } from '@nestjs/jwt';
 import { StudentEntity } from 'src/Application/Entities/Student.entity';
-import { TStudentPayload } from 'src/Application/@types';
+import { TSignIn, TStudentPayload } from 'src/Application/@types';
 import { RegisterStudentDto } from '../Student/dtos/Student.dtos';
 
 @Injectable()
@@ -30,12 +30,29 @@ export class AuthService {
     return student;
   }
 
-  async signIn(student: StudentEntity) {
-    const payload: TStudentPayload = { sub: student.id };
+  async signIn(credentials: TSignIn) {
+    const student = await this.validateStudent(credentials);
+
+    const payload: TStudentPayload = { sub: student.id, roles: student.roles };
 
     const access_token = this.jwtService.sign(payload);
 
     return { access_token };
+  }
+
+  private async validateStudent(credentials: TSignIn): Promise<StudentEntity> {
+    const studentExist = await this.studentsService.getByEmail(
+      credentials.email,
+    );
+
+    if (!studentExist) throw new UnauthorizedException('student not found');
+
+    const passwordIsMatch = studentExist.password === credentials.password;
+
+    if (!passwordIsMatch)
+      throw new UnauthorizedException('the password is wrong');
+
+    return studentExist;
   }
 
   async signUp(

@@ -1,3 +1,5 @@
+import { Role } from '../Domain/Auth/AccessControll/role';
+
 export type TPayload = {
   sub: string;
   email: string;
@@ -10,6 +12,7 @@ export type TSignIn = {
 
 export type TStudentPayload = {
   sub: string;
+  roles: Array<Role>;
   iat?: number;
   exp?: number;
 };

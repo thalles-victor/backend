@@ -4,23 +4,35 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { Observable } from 'rxjs';
+import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    return super.canActivate(context);
-  }
+export class AuthJwtGuard implements CanActivate {
+  constructor(private readonly jwtService: JwtService) {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  handleRequest(error, payload, info) {
-    if (error || !payload) {
-      throw error || new UnauthorizedException();
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const token = this.extractTokenFromHeader(request);
+
+    if (!token) {
+      throw new UnauthorizedException();
     }
 
-    return payload;
+    try {
+      const payload = await this.jwtService.verifyAsync(token);
+
+      request['user'] = payload;
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
+
+    return true;
+  }
+
+  private extractTokenFromHeader(request: Request) {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+
+    return type === 'Bearer' ? token : undefined;
   }
 }

@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Role } from '../Domain/Auth/AccessControll/role';
 
 @Entity({ name: 'students' })
 export class StudentEntity {
@@ -16,6 +17,9 @@ export class StudentEntity {
 
   @Column({ type: 'varchar', nullable: true, select: false })
   refresh_token?: string;
+
+  @Column({ type: 'varchar', default: [Role.STUDENT], array: true })
+  roles: Array<Role>;
 }
 
 export type UpdateStudentEntity = Omit<StudentEntity, 'id' | 'email'>;

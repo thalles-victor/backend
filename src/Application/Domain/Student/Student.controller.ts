@@ -1,11 +1,15 @@
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../Auth/guards/auth.guard';
 import { TStudentPayload } from 'src/Application/@types';
+import { RolesDecorator } from '../Auth/AccessControll/roles.decorator';
+import { Role } from '../Auth/AccessControll/role';
+import { AuthJwtGuard } from '../Auth/guards/auth.guard';
+import { RolesGuard } from '../Auth/AccessControll/role.guard';
 
 @Controller('student')
 export class StudentController {
   @Get('protected')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthJwtGuard, RolesGuard)
+  @RolesDecorator(Role.ADMIN, Role.STUDENT)
   protected(@Request() req: any) {
     const payload: TStudentPayload = req.user;
 
