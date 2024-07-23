@@ -1,4 +1,4 @@
-import { Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { LessonEntity } from './Lesson.entity';
 
 @Entity({ name: 'video' })
@@ -18,8 +18,8 @@ export class VideoEntity {
   @Column({ type: 'varchar' })
   original_file_name: string;
 
-  @OneToOne(() => LessonEntity, (lesson) => lesson.id)
-  lesson: LessonEntity;
+  @OneToMany(() => LessonEntity, (lesson) => lesson.video)
+  lesson?: LessonEntity[];
 
   @Column({ default: new Date() })
   upload_at: Date;

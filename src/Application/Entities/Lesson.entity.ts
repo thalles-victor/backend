@@ -1,4 +1,4 @@
-import { Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { VideoEntity } from './Video.entity';
 
 @Entity({ name: 'lessons' })
@@ -9,11 +9,11 @@ export class LessonEntity {
   @Column()
   title: string;
 
-  @OneToOne(() => VideoEntity, (video) => video.id)
-  video: VideoEntity;
+  @Column({ type: 'varchar' })
+  description: string;
 
-  @Column({ type: 'integer' })
-  duration: number;
+  @ManyToOne(() => VideoEntity, (video) => video.lesson)
+  video: VideoEntity;
 
   @Column({ default: new Date() })
   create_at: Date;
