@@ -20,7 +20,7 @@ type CreateResponseHeaderProps = {
   range: string;
 };
 
-@Controller('aulas')
+@Controller('lesson')
 export class CourseController {
   constructor(
     private readonly readLessonService: ReadLessonService,
@@ -95,7 +95,7 @@ export class CourseController {
   }
 
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('video'))
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     const result = this.uploadVideoService.execute(file);
 
