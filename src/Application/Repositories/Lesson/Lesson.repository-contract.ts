@@ -6,4 +6,5 @@ export interface LessonRepositoryContract {
   create(lessonEntity: LessonEntity): Promise<LessonEntity>;
   getBy(param: LessonSearchParam): Promise<LessonEntity | null>;
   deleteBy(param: LessonSearchParam): Promise<'success' | 'fail'>;
+  getAll(): Promise<LessonEntity[]>;
 }

@@ -4,7 +4,7 @@ import {
   LessonSearchParam,
 } from './Lesson.repository-contract';
 import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -16,13 +16,12 @@ export class LessonTypeOrmRepository implements LessonRepositoryContract {
 
   async create(lessonEntity: LessonEntity): Promise<LessonEntity> {
     try {
-      const entity = this.lessonRepository.create(lessonEntity);
-
-      const lessonCreated = await this.lessonRepository.save(entity);
+      const lessonCreated = await this.lessonRepository.save(lessonEntity);
 
       return lessonCreated;
     } catch (error) {
       console.log(error);
+      throw new InternalServerErrorException();
     }
   }
 
@@ -45,5 +44,13 @@ export class LessonTypeOrmRepository implements LessonRepositoryContract {
       console.log(error);
       return 'fail';
     }
+  }
+
+  async getAll(): Promise<LessonEntity[]> {
+    return this.lessonRepository.find({
+      relations: {
+        video: true,
+      },
+    });
   }
 }

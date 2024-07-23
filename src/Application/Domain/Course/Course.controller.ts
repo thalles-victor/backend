@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Body,
   Controller,
   Get,
   Param,
@@ -13,6 +14,9 @@ import { ReadLessonService } from './UseCases/ReadVideo/ReadVideo.service';
 import { Request, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadVideoService } from './UseCases/UploadVideo/UploadService.service';
+import { CreateLessonDto } from './UseCases/CreateLesson/CreateLesson.dto';
+import { CreateLessonService } from './UseCases/CreateLesson/CreateLesson.service';
+import { GetLessonService } from './UseCases/GetLessons/GetLessons.service';
 
 type CreateResponseHeaderProps = {
   module: string;
@@ -25,6 +29,8 @@ export class CourseController {
   constructor(
     private readonly readLessonService: ReadLessonService,
     private readonly uploadVideoService: UploadVideoService,
+    private readonly createLessonService: CreateLessonService,
+    private readonly getLessonsService: GetLessonService,
   ) {}
 
   @Get(':module/:lesson')
@@ -100,5 +106,15 @@ export class CourseController {
     const result = this.uploadVideoService.execute(file);
 
     return result;
+  }
+
+  @Post('')
+  async createLesson(@Body() lessonDto: CreateLessonDto) {
+    return this.createLessonService.execute(lessonDto);
+  }
+
+  @Get()
+  getLessons() {
+    return this.getLessonsService.execute();
   }
 }
