@@ -4,4 +4,4 @@ import {
   generateVideoId,
 } from './id-generate';
 
-export { generateStudentId };
+export { generateStudentId, defaultUUID_V4, generateVideoId };

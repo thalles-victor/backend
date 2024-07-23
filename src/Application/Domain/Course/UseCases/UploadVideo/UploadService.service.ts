@@ -4,7 +4,7 @@ import * as path from 'node:path';
 import { VideoEntity } from 'src/Application/Entities/Video.entity';
 // import { VideoLessonsEntity } from 'src/Application/Entities/Module.entity';
 import { VideoTypeOrmRepository } from 'src/Application/Repositories/Files/Videos/VideoTypeOrm.repository';
-import { defaultUUID_V4, generateVideoId } from 'src/utils/id-generate';
+import { defaultUUID_V4, generateVideoId } from '@utils';
 
 @Injectable()
 export class UploadVideoService {
@@ -35,8 +35,6 @@ export class UploadVideoService {
     try {
       fs.writeFileSync(filePath, file.buffer);
       const videoSaved = await this.videoRepository.create(videoEntity);
-
-      console.log(videoSaved);
 
       return videoSaved;
     } catch (error) {
