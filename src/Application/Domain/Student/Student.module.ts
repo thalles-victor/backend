@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { StudentController } from './Student.controller';
 import { StudentService } from './Student.service';
-import { RepositoriesModule } from 'src/Application/Repositories/Students.module';
+import { RepositoriesModule } from 'src/Application/Repositories/Repositories.module';
 import { AuthJwtGuard } from '../Auth/guards/auth.guard';
 import { RolesGuard } from '../Auth/AccessControl/role.guard';
 
