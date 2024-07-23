@@ -9,11 +9,9 @@ import { StudentEntity } from './Application/Entities/Student.entity';
 import { RepositoriesModule } from './Application/Repositories/Repositories.module';
 
 import * as Joi from 'joi';
-import {
-  LessonEntity,
-  ModuleEntity,
-  VideoLessonsEntity,
-} from './Application/Entities/Module.entity';
+import { ModuleEntity } from './Application/Entities/Module.entity';
+import { LessonEntity } from './Application/Entities/Lesson.entity';
+import { VideoEntity } from './Application/Entities/Video.entity';
 
 const schema = Joi.object().keys({
   ACCESS_TOKEN_SECRET: Joi.string().required(),
@@ -36,7 +34,7 @@ const schema = Joi.object().keys({
       database: 'db',
       password: 'pass',
       username: 'user',
-      entities: [StudentEntity, ModuleEntity, LessonEntity, VideoLessonsEntity],
+      entities: [StudentEntity, ModuleEntity, LessonEntity, VideoEntity],
       synchronize: true,
     }),
 
