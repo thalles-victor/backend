@@ -13,7 +13,7 @@ export class VideoEntity {
   format: string;
 
   @Column({ type: 'varchar', unique: true })
-  file_id: string;
+  video_id: string;
 
   @Column({ type: 'varchar' })
   original_file_name: string;
