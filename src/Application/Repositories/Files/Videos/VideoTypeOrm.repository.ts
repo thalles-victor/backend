@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { VideoEntity } from 'src/Application/Entities/Video.entity';
 
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import {
   VideoSearchParam,
   VideoRepositoryContract,
@@ -13,6 +13,7 @@ export class VideoTypeOrmRepository implements VideoRepositoryContract {
   constructor(
     @InjectRepository(VideoEntity)
     private readonly videoTypeOrmRepository: Repository<VideoEntity>,
+    private dataSource: DataSource,
   ) {}
 
   async create(videoEntity: VideoEntity) {
@@ -51,5 +52,13 @@ export class VideoTypeOrmRepository implements VideoRepositoryContract {
     } catch (error) {
       return 'fail';
     }
+  }
+
+  async getNumberOfLessons(): Promise<number> {
+    const numberOfLessons = await this.dataSource.query<[{ count: number }]>(
+      `SELECT COUNT(*) FROM lessons;`,
+    );
+
+    return numberOfLessons[0].count;
   }
 }
