@@ -6,9 +6,10 @@ import {
 import { StudentService } from '../Student/Student.service';
 import { JwtService } from '@nestjs/jwt';
 import { StudentEntity } from 'src/Application/Entities/Student.entity';
-import { TRootPayload, TSignIn, TStudentPayload } from 'src/Application/@types';
+import { TRootPayload, TStudentPayload } from 'src/Application/@types';
 import { RegisterStudentDto } from '../Student/dtos/Student.dtos';
 import { ConfigService } from '@nestjs/config';
+import { SignInDto } from './Dtos/auth.dtos';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +41,7 @@ export class AuthService {
     return student;
   }
 
-  async signIn(credentials: TSignIn) {
+  async signIn(credentials: SignInDto) {
     const student = await this.validateUser(
       credentials.email,
       credentials.password,
@@ -67,7 +68,9 @@ export class AuthService {
   }
 
   /*** @deprecated */
-  private async validateStudent(credentials: TSignIn): Promise<StudentEntity> {
+  private async validateStudent(
+    credentials: SignInDto,
+  ): Promise<StudentEntity> {
     const studentExist = await this.studentsService.getByEmail(
       credentials.email,
     );
