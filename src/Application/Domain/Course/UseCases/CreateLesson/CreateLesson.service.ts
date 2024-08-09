@@ -3,15 +3,27 @@ import { LessonTypeOrmRepository } from 'src/Application/Repositories/Lesson/Les
 import { CreateLessonDto } from './CreateLesson.dto';
 import { LessonEntity } from 'src/Application/Entities/Lesson.entity';
 import { VideoTypeOrmRepository } from 'src/Application/Repositories/Files/Videos/VideoTypeOrm.repository';
+import { ModuleTypeOrmRepository } from 'src/Application/Repositories/Module/ModuleTypeOrm.repository';
 
 @Injectable()
 export class CreateLessonService {
   constructor(
     private readonly lessonRepository: LessonTypeOrmRepository,
     private readonly videoRepository: VideoTypeOrmRepository,
+    private readonly moduleRepository: ModuleTypeOrmRepository,
   ) {}
 
   async execute(lessonDto: CreateLessonDto) {
+    // check id module exist
+    const moduleExist = await this.moduleRepository.getBy({
+      title: lessonDto.module_title,
+    });
+
+    if (!moduleExist) {
+      throw new NotFoundException('module not found');
+    }
+
+    // check if video lesson exist
     const videoExist = await this.videoRepository.getBy({
       video_id: lessonDto.video_id,
     });
@@ -28,6 +40,7 @@ export class CreateLessonService {
       video: videoExist,
       create_at: new Date(),
       updated_at: new Date(),
+      module: moduleExist,
     } as LessonEntity);
 
     const lessonCreated = await this.lessonRepository.create(lessonEntity);

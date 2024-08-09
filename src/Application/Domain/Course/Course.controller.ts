@@ -124,7 +124,7 @@ export class CourseController {
     return result;
   }
 
-  @Post('')
+  @Post('lesson')
   async createLesson(@Body() lessonDto: CreateLessonDto) {
     return this.createLessonService.execute(lessonDto);
   }
