@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Req,
   Res,
   UploadedFile,
@@ -17,6 +18,10 @@ import { UploadVideoService } from './UseCases/UploadVideo/UploadService.service
 import { CreateLessonDto } from './UseCases/CreateLesson/CreateLesson.dto';
 import { CreateLessonService } from './UseCases/CreateLesson/CreateLesson.service';
 import { GetLessonService } from './UseCases/GetLessons/GetLessons.service';
+import { GetAllModulesService } from './UseCases/GetAllModules/GetAllModules.service';
+import { validateNumber } from '@utils';
+import { CreateModuleDto } from './UseCases/CreateModule/CreateModule.dto';
+import { CreateModuleService } from './UseCases/CreateModule/CreteModule.service';
 
 type CreateResponseHeaderProps = {
   module: string;
@@ -24,20 +29,27 @@ type CreateResponseHeaderProps = {
   range: string;
 };
 
-@Controller('lesson')
+@Controller('course')
 export class CourseController {
   constructor(
     private readonly readLessonService: ReadLessonService,
     private readonly uploadVideoService: UploadVideoService,
     private readonly createLessonService: CreateLessonService,
     private readonly getLessonsService: GetLessonService,
+    private readonly getAllModulesService: GetAllModulesService,
+    private readonly createModuleService: CreateModuleService,
   ) {}
 
-  @Get(':module/:lesson')
+  @Get('hello')
+  getCourseHello() {
+    return 'hello course router';
+  }
+
+  @Get('read-lesson/:lesson')
   async exampleLesson(
     @Req() request: Request,
     @Res() response: Response,
-    @Param('module') module: string,
+    // @Param('module') module: string,
     @Param('lesson') lesson: string,
   ) {
     const range = request.headers.range;
@@ -52,17 +64,21 @@ export class CourseController {
     }
 
     const { headers, interval } = this.createResponseHeader({
-      module,
+      module: 'Module-1-Iniciando-Com-nestjs',
       lesson,
       range,
     });
 
     response.writeHead(206, headers);
 
-    const stream = await this.readLessonService.execute(module, lesson, {
-      start: interval.start,
-      end: interval.end,
-    });
+    const stream = await this.readLessonService.execute(
+      'Module-1-Iniciando-Com-nestjs',
+      lesson,
+      {
+        start: interval.start,
+        end: interval.end,
+      },
+    );
 
     stream.pipe(response);
   }
@@ -116,5 +132,28 @@ export class CourseController {
   @Get()
   getLessons() {
     return this.getLessonsService.execute();
+  }
+
+  @Get('modules')
+  getAllModules(@Query('take') take: string, @Query('skip') skip: string) {
+    let takeAsInt: number;
+    let skipAsInt: number;
+
+    try {
+      takeAsInt = typeof take == 'undefined' ? 10 : validateNumber(take);
+      skipAsInt = typeof skip == 'undefined' ? 0 : validateNumber(skip);
+    } catch (error) {
+      throw new BadRequestException('take and skip must be a number');
+    }
+
+    return this.getAllModulesService.execute({
+      take: takeAsInt,
+      skip: skipAsInt,
+    });
+  }
+
+  @Post('module/create')
+  async createModule(@Body() createModuleDto: CreateModuleDto) {
+    return await this.createModuleService.execute(createModuleDto);
   }
 }

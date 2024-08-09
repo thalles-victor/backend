@@ -1,10 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { VideoEntity } from './Video.entity';
+import { ModuleEntity } from './Module.entity';
 
 @Entity({ name: 'lessons' })
 export class LessonEntity {
-  @PrimaryColumn()
-  id: string;
+  @PrimaryGeneratedColumn('increment')
+  id: number;
 
   @Column()
   title: string;
@@ -14,6 +15,9 @@ export class LessonEntity {
 
   @ManyToOne(() => VideoEntity, (video) => video.lesson)
   video: VideoEntity;
+
+  @ManyToOne(() => ModuleEntity, (module) => module.lessons)
+  module: ModuleEntity;
 
   @Column({ default: new Date() })
   create_at: Date;

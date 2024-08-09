@@ -6,7 +6,13 @@ export class ModuleEntity {
   @PrimaryColumn()
   id: string;
 
-  @OneToMany(() => LessonEntity, (lesson) => lesson.id)
+  @Column({ type: 'varchar', unique: true })
+  title: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  description: string | null;
+
+  @OneToMany(() => LessonEntity, (lesson) => lesson.module)
   lessons: LessonEntity[];
 
   @Column({ default: new Date() })
