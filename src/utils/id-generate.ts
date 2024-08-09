@@ -1,6 +1,6 @@
 import { v4 as uuid_v4 } from 'uuid';
 
-function generateShortId(size = 6) {
+export function generateShortId(size = 6) {
   const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -22,4 +22,15 @@ export function generateStudentId() {
 
 export function generateVideoId(filename: string, size_id: number = 6) {
   return `${generateShortId(size_id)}-${filename.replace(' ', '')}`;
+}
+
+export function generateRecoverPasswordToken(size: number) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+  let result = '';
+  for (let i = 0; i < size; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+
+  return result;
 }
