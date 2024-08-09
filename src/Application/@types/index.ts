@@ -15,3 +15,8 @@ export type TStudentPayload = {
 export type TRootPayload = {
   roles: ['ROOT'];
 };
+
+export type Pagination = {
+  take?: number;
+  skip?: number;
+};
