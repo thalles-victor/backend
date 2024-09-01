@@ -19,9 +19,9 @@ import { CreateLessonDto } from './UseCases/CreateLesson/CreateLesson.dto';
 import { CreateLessonService } from './UseCases/CreateLesson/CreateLesson.service';
 import { GetLessonService } from './UseCases/GetLessons/GetLessons.service';
 import { GetAllModulesService } from './UseCases/GetAllModules/GetAllModules.service';
-import { validateNumber } from '@utils';
 import { CreateModuleDto } from './UseCases/CreateModule/CreateModule.dto';
 import { CreateModuleService } from './UseCases/CreateModule/CreteModule.service';
+import { validatePagination } from 'src/utils';
 
 type CreateResponseHeaderProps = {
   module: string;
@@ -136,19 +136,11 @@ export class CourseController {
 
   @Get('modules')
   getAllModules(@Query('take') take: string, @Query('skip') skip: string) {
-    let takeAsInt: number;
-    let skipAsInt: number;
-
-    try {
-      takeAsInt = typeof take == 'undefined' ? 10 : validateNumber(take);
-      skipAsInt = typeof skip == 'undefined' ? 0 : validateNumber(skip);
-    } catch (error) {
-      throw new BadRequestException('take and skip must be a number');
-    }
+    const validPagination = validatePagination({ take, skip });
 
     return this.getAllModulesService.execute({
-      take: takeAsInt,
-      skip: skipAsInt,
+      take: validPagination.take,
+      skip: validPagination.skip,
     });
   }
 

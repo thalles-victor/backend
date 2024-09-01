@@ -5,7 +5,11 @@ import {
   generateShortId,
   generateRecoverPasswordToken,
 } from './id-generate';
-import { validateNumber } from './validators';
+import {
+  validatePagination,
+  splitKeyAnValue,
+  convertToNumber,
+} from './validators';
 
 export {
   generateStudentId,
@@ -13,5 +17,7 @@ export {
   generateVideoId,
   generateShortId,
   generateRecoverPasswordToken,
-  validateNumber,
+  validatePagination,
+  splitKeyAnValue,
+  convertToNumber,
 };

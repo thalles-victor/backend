@@ -6,9 +6,9 @@ import { VideoTypeOrmRepository } from './Files/Videos/VideoTypeOrm.repository';
 import { VideoEntity } from '../Entities/Video.entity';
 import { LessonEntity } from '../Entities/Lesson.entity';
 import { LessonTypeOrmRepository } from './Lesson/LessonTypeOrm.repository';
-import { RecoverAccountEntity } from '../Entities/RecoverAccount.entity';
 import { ModuleEntity } from '../Entities/Module.entity';
 import { ModuleTypeOrmRepository } from './Module/ModuleTypeOrm.repository';
+import { RecoverAccountEntity } from '../Entities/RecoverAccount.entity';
 
 @Global()
 @Module({
@@ -17,8 +17,8 @@ import { ModuleTypeOrmRepository } from './Module/ModuleTypeOrm.repository';
       StudentEntity,
       VideoEntity,
       LessonEntity,
-      RecoverAccountEntity,
       ModuleEntity,
+      RecoverAccountEntity,
     ]),
   ],
   providers: [
