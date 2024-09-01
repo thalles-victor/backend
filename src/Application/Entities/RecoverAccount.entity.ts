@@ -7,7 +7,7 @@ export class RecoverAccountEntity {
   id: string;
 
   @Column({ type: 'varchar', nullable: true, default: null })
-  toke: string | null;
+  token: string | null;
 
   @Column({ type: 'varchar', nullable: true, default: null })
   attempts: string | null;
@@ -17,4 +17,10 @@ export class RecoverAccountEntity {
 
   @OneToOne(() => StudentEntity, (student) => student.RecoverAccount)
   Student: StudentEntity;
+}
+
+export interface RecoverAccountUpdateEntity {
+  token: string;
+  attempts: string;
+  expires_in: number;
 }

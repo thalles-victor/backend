@@ -8,6 +8,7 @@ import { LessonEntity } from '../Entities/Lesson.entity';
 import { LessonTypeOrmRepository } from './Lesson/LessonTypeOrm.repository';
 import { ModuleEntity } from '../Entities/Module.entity';
 import { ModuleTypeOrmRepository } from './Module/ModuleTypeOrm.repository';
+import { RecoverAccountEntity } from '../Entities/RecoverAccount.entity';
 
 @Global()
 @Module({
@@ -17,6 +18,7 @@ import { ModuleTypeOrmRepository } from './Module/ModuleTypeOrm.repository';
       VideoEntity,
       LessonEntity,
       ModuleEntity,
+      RecoverAccountEntity,
     ]),
   ],
   providers: [
