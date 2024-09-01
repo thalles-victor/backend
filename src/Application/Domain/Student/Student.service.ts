@@ -29,6 +29,7 @@ export class StudentService {
       email: student.email,
       password: student.password,
       roles: [],
+      RecoverAccount: null,
     });
 
     return studentRegistered;
@@ -64,6 +65,7 @@ export class StudentService {
         password: updateEntity.password,
         refresh_token: updateEntity.refresh_token,
         roles: [Role.STUDENT],
+        RecoverAccount: null,
       },
     );
 

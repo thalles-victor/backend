@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 import { Role } from '../Domain/Auth/AccessControl/role';
+import { RecoverAccountEntity } from './RecoverAccount.entity';
 
 @Entity({ name: 'students' })
 export class StudentEntity {
@@ -20,6 +21,13 @@ export class StudentEntity {
 
   @Column({ type: 'varchar', default: [Role.STUDENT], array: true })
   roles: Array<Role>;
+
+  @OneToOne(
+    () => RecoverAccountEntity,
+    (recoverAccount) => recoverAccount.Student,
+  )
+  @JoinColumn()
+  RecoverAccount: RecoverAccountEntity;
 }
 
 export type UpdateStudentEntity = Omit<StudentEntity, 'id' | 'email'>;
