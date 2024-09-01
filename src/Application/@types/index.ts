@@ -20,3 +20,9 @@ export type Pagination = {
   take?: number;
   skip?: number;
 };
+
+type FlexiblePagination<T> = {
+  [P in keyof T]?: T[P] | string;
+};
+
+export type PaginationFlexibleType = FlexiblePagination<Pagination>;
